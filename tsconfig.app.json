@@ -34,7 +34,10 @@
       ],
       "api/*": [
         "./src/api/*"
-      ]
+      ],
+      "domain/*": [
+        "./src/domain/*"
+      ],
     }
   },
   "include": [

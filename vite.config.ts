@@ -9,7 +9,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       'config': path.resolve(__dirname, './src/config'),
-      'api': path.resolve(__dirname, './src/api')
+      'api': path.resolve(__dirname, './src/api'),
+      'domain': path.resolve(__dirname, './src/domain'),
     }
   }
 })
