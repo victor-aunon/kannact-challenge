@@ -1,6 +1,8 @@
+import type { PatientMedicalData } from 'domain/medical'
+
 export type User = {
-  id: UUID,
-  name: string,
+  id: UUID
+  name: string
   surname: string
   age: number
   email: Email | null
@@ -25,9 +27,9 @@ export type Patient = User & {
   weight: WeightInKg
   height: HeightInCm
   emergencyContact: EmergencyContact | null
+  medicalData: PatientMedicalData
 }
 
 export type Therapist = User & {
   role: Roles.THERAPIST
 }
-
