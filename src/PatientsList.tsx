@@ -7,10 +7,17 @@ const fetchPatients = async () => {
   return data
 }
 
+const fetchPatient = async (id: UUID) => {
+  const { data } = await httpClient()(endpoints.getPatient.route(id));
+  return data
+}
+
 export default function PatientsList() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['patients'],
-    queryFn: fetchPatients
+    queryFn: fetchPatients,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10
   });
 
   console.log(data, isLoading, error)

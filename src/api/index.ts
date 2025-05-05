@@ -1,9 +1,11 @@
+import { endpoints } from "api/endpoints";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { env } from "config/env";
-import { endpoints } from "api/endpoints";
+import { fakePatients } from "api/data/users";
 
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { Patient } from "domain/users";
 
 type HTTClientMethodMap = {
   GET: (url: string, config?: AxiosRequestConfig) => Promise<AxiosResponse>
@@ -32,12 +34,23 @@ function httpClient<R = any, M extends keyof HTTClientMethodMap = 'GET'>({ metho
 }
 
 const mockAdapter = new MockAdapter(axiosClient, { delayResponse: Math.random() * 300 + 300 }); // Between 300ms and 600ms
+const getPatientRegex = new RegExp(`${endpoints.listPatients.route}/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`)
 
-mockAdapter.onGet(endpoints.listPatients.route).reply(200, [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Doe' },
-]);
+mockAdapter.onGet(endpoints.listPatients.route).reply((config) => {
+  const patients: Array<Omit<Patient, 'medicalData'>> = fakePatients.map(({ medicalData, ...patient }) => patient);
+  return [200, patients]
+});
 
+mockAdapter.onGet(getPatientRegex).reply((config) => {
+  const id = config.url?.match(getPatientRegex)?.[1];
+  const patient = fakePatients.find(patient => patient.id === id);
 
+  if (!patient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  const { medicalData, ...patientData } = patient;
+  return [200, patientData]
+});
 
 export default httpClient;

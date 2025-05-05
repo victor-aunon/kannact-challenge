@@ -7,5 +7,9 @@ export const endpoints = {
   listPatients: {
     method: "GET",
     route: "api/v1/patients",
-  } as ApiEndPoint
+  } as ApiEndPoint,
+  getPatient: {
+    method: "GET",
+    route: (id: UUID) => `api/v1/patients/${id}`,
+  } as ApiEndPoint<"GET", (id: UUID) => string>
 }
