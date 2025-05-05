@@ -3,11 +3,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -26,21 +22,11 @@
     // Aliases
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "config/*": [
-        "./src/config/*"
-      ],
-      "api/*": [
-        "./src/api/*"
-      ],
-      "domain/*": [
-        "./src/domain/*"
-      ],
+      "@/*": ["./src/*"],
+      "config/*": ["./src/config/*"],
+      "api/*": ["./src/api/*"],
+      "domain/*": ["./src/domain/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

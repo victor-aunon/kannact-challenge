@@ -1,13 +1,13 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 const envSchema = z.object({
   VITE_BASE_URL: z.string().url(),
-});
+})
 
-const parsed = envSchema.safeParse(import.meta.env);
+const parsed = envSchema.safeParse(import.meta.env)
 
 if (!parsed.success) {
-  throw new Error('Invalid environment variables');
+  throw new Error('Invalid environment variables')
 }
 
-export const env = parsed.data;
+export const env = parsed.data
