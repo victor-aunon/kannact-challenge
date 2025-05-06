@@ -131,6 +131,11 @@ button {
   align-items: center;
   gap: var(--size-xsmall);
   width: fit-content;
+  transition: all 0.1s ease-in-out;
+
+  &:active {
+    scale: 0.95;
+  }
 }
 
 @theme inline {

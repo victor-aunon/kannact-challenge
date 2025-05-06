@@ -15,4 +15,20 @@ export const endpoints = {
     method: 'GET',
     route: (id: UUID) => `api/v1/patients/${id}`,
   } as ApiEndPoint<'GET', (id: UUID) => string>,
+  getPatientSteps: {
+    method: 'GET',
+    route: (id: UUID) => `api/v1/patients/${id}/health-metrics/steps`,
+  } as ApiEndPoint<'GET', (id: UUID) => string>,
+  getPatientHeartRate: {
+    method: 'GET',
+    route: (id: UUID) => `api/v1/patients/${id}/healt-metrics/heart-rate`,
+  } as ApiEndPoint<'GET', (id: UUID) => string>,
+  getPatientGlucose: {
+    method: 'GET',
+    route: (id: UUID) => `api/v1/patients/${id}/health-metrics/glucose`,
+  } as ApiEndPoint<'GET', (id: UUID) => string>,
+  getPatientBloodPressure: {
+    method: 'GET',
+    route: (id: UUID) => `api/v1/patients/${id}/health-metrics/blood-pressure`,
+  } as ApiEndPoint<'GET', (id: UUID) => string>,
 }

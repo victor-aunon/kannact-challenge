@@ -1,5 +1,3 @@
-import type { Diagnosis } from './medical'
-
 export type User = {
   id: UUID
   name: string

@@ -23,9 +23,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "config/*": ["./src/config/*"],
+      "app/*": ["./src/app/*"],
       "api/*": ["./src/api/*"],
       "domain/*": ["./src/domain/*"],
+      "services/*": ["./src/services/*"],
+      "application/*": ["./src/application/*"],
       "ui/*": ["./src/ui/*"]
     }
   },
