@@ -1,15 +1,18 @@
-import PatientsList from 'ui/components/patients/PatientsList'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
-const queryClient = new QueryClient()
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { RouterProvider } from '@tanstack/react-router'
+import queryClient, { localStoragePersister } from 'app/queryClient'
+import router from 'app/router'
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: localStoragePersister }}
+    >
       <ReactQueryDevtools initialIsOpen />
-      <PatientsList />
-    </QueryClientProvider>
+      <RouterProvider router={router} />
+    </PersistQueryClientProvider>
   )
 }
 

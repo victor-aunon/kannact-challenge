@@ -1,7 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { endpoints } from 'api/endpoints'
-import httpClient from 'api/index'
+import { apiService } from 'services/api.adapter'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -28,26 +27,11 @@ import { icons } from 'ui/icons'
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/components/avatar'
 import type { Patient } from 'domain/users'
 
-const fetchPatients = async () => {
-  const { data } = await httpClient()(endpoints.listPatients.route)
-  return data
-}
-
-const fetchPatient = async (id: UUID) => {
-  const { data } = await httpClient()(endpoints.getPatient.route(id))
-  return data
-}
-
 export default function PatientsList() {
-  const {
-    data: patients,
-    isLoading,
-    error,
-  } = useQuery({
+  const { getPatients } = apiService()
+  const { data: patients, error } = useSuspenseQuery({
     queryKey: ['patients'],
-    queryFn: fetchPatients,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
+    queryFn: getPatients,
   })
 
   const [sorting, setSorting] = useState<SortingState>([])
@@ -61,7 +45,7 @@ export default function PatientsList() {
       enableHiding: true,
       cell: ({ row }) => {
         return (
-          <Avatar>
+          <Avatar className="avatar--primary">
             {(row.getValue('photo') as Patient['photo']) && (
               <AvatarImage src={row.getValue('photo')} />
             )}
@@ -158,8 +142,6 @@ export default function PatientsList() {
       columnVisibility,
     },
   })
-
-  if (isLoading) <div>Loading...</div>
 
   if (error) return <div>Error: {error.message}</div>
 
