@@ -3,6 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: var(--size-small);
 }
 
 .table__pagination__info {
@@ -28,7 +29,10 @@
 .table__pagination__button {
   background-color: hsl(var(--color-primary));
   color: white;
-  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    filter: drop-shadow(0 0 4px hsla(var(--color-secondary), 0.4));
+  }
 
   svg {
     stroke: white;
