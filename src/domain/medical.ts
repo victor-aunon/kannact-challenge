@@ -11,27 +11,32 @@ export type Medication = {
   description?: string
   startDate?: DateTimeString
   endDate?: DateTimeString
+  patientId: UUID
 }
 
 export type BloodPressure = {
   systolic: number
   diastolic: number
   date: DateTimeString
+  patientId: UUID
 }
 
 export type HeartRate = {
   bpm: number
   date: DateTimeString
+  patientId?: UUID
 }
 
 export type Glucose = {
   mgdl: number
   date: DateTimeString
+  patientId: UUID
 }
 
 export type DailySteps = {
   steps: number
   date: DateTimeString
+  patientId: UUID
 }
 
 export type SessionNote = {
@@ -42,12 +47,8 @@ export type SessionNote = {
 }
 
 export type PatientMedicalData = {
+  patientId: UUID
   diagnoses: Diagnosis[]
-  activeMedications: Medication[]
-  bloodPressure: BloodPressure[]
-  heartRate: HeartRate[]
-  glucose: Glucose[]
-  dailySteps: DailySteps[]
-  sessionNotes: SessionNote[]
-  activity?: 'low' | 'medium' | 'high'
+  activeMedications: Medication[] | null
+  activity: 'low' | 'medium' | 'high' | null
 }

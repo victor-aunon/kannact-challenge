@@ -1,6 +1,28 @@
 import { Roles, type Patient } from 'domain/users'
+import type {
+  PatientMedicalData,
+  BloodPressure,
+  HeartRate,
+  Glucose,
+  DailySteps,
+  Medication,
+  SessionNote,
+} from 'domain/medical'
 
-export const fakePatients: Patient[] = [
+export type FakePatient = Patient & {
+  medicalData: Omit<PatientMedicalData, 'patientId' | 'activeMedications'> & {
+    activeMedications: Omit<Medication, 'patientId'>[]
+  }
+  healthMetrics: {
+    bloodPressure: Omit<BloodPressure, 'patientId'>[] | null
+    heartRate: Omit<HeartRate, 'patientId'>[] | null
+    glucose: Omit<Glucose, 'patientId'>[] | null
+    dailySteps: Omit<DailySteps, 'patientId'>[] | null
+  }
+  sessionNotes: SessionNote[]
+}
+
+export const fakePatients: FakePatient[] = [
   {
     id: 'abf1a21a-47b5-4b64-9712-3f6f799bc439',
     name: 'Barbara',
@@ -37,6 +59,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-04-24T19:06:11',
         },
       ],
+      activity: 'high',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 125,
@@ -89,7 +114,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      heartRate: [],
+      heartRate: null,
       glucose: [
         {
           mgdl: 91,
@@ -174,9 +199,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'high',
     },
+    sessionNotes: [],
   },
   {
     id: '90e1ca2d-139f-4617-aafc-9e104c7a6c0e',
@@ -185,7 +209,7 @@ export const fakePatients: Patient[] = [
     age: 65,
     email: 'patricia.johnson@example.com',
     phone: '+1-555-5133',
-    photo: null,
+    photo: '/images/avatars/old-woman-1_resized.png',
     role: Roles.PATIENT,
     sex: 'female',
     weight: 79.4,
@@ -206,7 +230,10 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-16T19:06:11',
         },
       ],
-      bloodPressure: [],
+      activity: 'high',
+    },
+    healthMetrics: {
+      bloodPressure: null,
       heartRate: [
         {
           bpm: 87,
@@ -249,7 +276,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 8452,
@@ -292,9 +319,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'high',
     },
+    sessionNotes: [],
   },
   {
     id: '04571a20-8659-4b7a-9118-1c61d89ee845',
@@ -328,6 +354,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-13T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 153,
@@ -506,9 +535,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '12dc7d0f-d6e3-4484-bac8-2b77e8d96386',
@@ -552,6 +580,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-04-26T19:06:11',
         },
       ],
+      activity: null,
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 138,
@@ -646,10 +677,10 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
-      dailySteps: [],
-      sessionNotes: [],
+      glucose: null,
+      dailySteps: null,
     },
+    sessionNotes: [],
   },
   {
     id: '85900924-e609-46a4-a1be-e4c4fad8f7fd',
@@ -693,7 +724,10 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-12T19:06:11',
         },
       ],
-      bloodPressure: [],
+      activity: 'low',
+    },
+    healthMetrics: {
+      bloodPressure: null,
       heartRate: [
         {
           bpm: 79,
@@ -736,7 +770,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 2033,
@@ -779,9 +813,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'low',
     },
+    sessionNotes: [],
   },
   {
     id: 'c50502b5-28dd-4447-b53f-16e09e941815',
@@ -831,6 +864,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-23T19:06:11',
         },
       ],
+      activity: 'low',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 145,
@@ -925,7 +961,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 2307,
@@ -968,9 +1004,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'low',
     },
+    sessionNotes: [],
   },
   {
     id: '160f0f53-6511-4bf5-a813-75ea30771592',
@@ -979,7 +1014,7 @@ export const fakePatients: Patient[] = [
     age: 66,
     email: 'william.anderson@example.com',
     phone: '+1-555-5131',
-    photo: null,
+    photo: '/images/avatars/old-man-1_resized.jpg',
     role: Roles.PATIENT,
     sex: 'male',
     weight: 70.3,
@@ -1010,7 +1045,10 @@ export const fakePatients: Patient[] = [
           startDate: '2025-04-06T19:06:11',
         },
       ],
-      bloodPressure: [],
+      activity: 'medium',
+    },
+    healthMetrics: {
+      bloodPressure: null,
       heartRate: [
         {
           bpm: 77,
@@ -1137,9 +1175,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: 'c5490dfd-6651-483c-bb0f-0fa6c6dd7cdd',
@@ -1169,6 +1206,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-21T19:06:11',
         },
       ],
+      activity: 'low',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 142,
@@ -1263,7 +1303,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 1570,
@@ -1306,9 +1346,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'low',
     },
+    sessionNotes: [],
   },
   {
     id: 'decf34f4-30db-4f41-bd49-96a30c3f99c4',
@@ -1342,6 +1381,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-13T19:06:11',
         },
       ],
+      activity: 'low',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 160,
@@ -1520,9 +1562,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'low',
     },
+    sessionNotes: [],
   },
   {
     id: 'ee668fce-fb0a-4e4f-9c46-16a1853d90dd',
@@ -1546,7 +1587,8 @@ export const fakePatients: Patient[] = [
       photo: null,
       role: Roles.EMERGENCY_CONTACT,
       relationship: 'Daughter',
-    }, medicalData: {
+    },
+    medicalData: {
       diagnoses: [
         {
           id: '3290cad1-4b4f-4960-804c-93bd1855635f',
@@ -1567,7 +1609,10 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-18T19:06:11',
         },
       ],
-      bloodPressure: [],
+      activity: 'medium',
+    },
+    healthMetrics: {
+      bloodPressure: null,
       heartRate: [
         {
           bpm: 69,
@@ -1610,7 +1655,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 4508,
@@ -1653,9 +1698,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '07fb6ac6-6eb3-4950-bb9b-2401d36efd3b',
@@ -1699,6 +1743,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-25T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 147,
@@ -1793,7 +1840,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 4898,
@@ -1836,9 +1883,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '6ee315e4-0b24-42d9-8ff6-c715dd510bd2',
@@ -1882,6 +1928,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-24T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 126,
@@ -2060,9 +2109,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '25b024f8-470c-492c-8a7f-f924acaf3526',
@@ -2071,7 +2119,7 @@ export const fakePatients: Patient[] = [
     age: 76,
     email: 'william.taylor@example.com',
     phone: '+1-555-2928',
-    photo: null,
+    photo: '/images/avatars/old-man-2_resized.jpg',
     role: Roles.PATIENT,
     sex: 'male',
     weight: 60.5,
@@ -2086,7 +2134,8 @@ export const fakePatients: Patient[] = [
       photo: null,
       role: Roles.EMERGENCY_CONTACT,
       relationship: 'Niece',
-    }, medicalData: {
+    },
+    medicalData: {
       diagnoses: [
         {
           id: 'c48e553a-9e20-4457-88c3-6d9bbd15479f',
@@ -2111,7 +2160,10 @@ export const fakePatients: Patient[] = [
           startDate: '2025-04-16T19:06:11',
         },
       ],
-      bloodPressure: [],
+      activity: 'low',
+    },
+    healthMetrics: {
+      bloodPressure: null,
       heartRate: [
         {
           bpm: 79,
@@ -2154,7 +2206,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 2449,
@@ -2197,9 +2249,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'low',
     },
+    sessionNotes: [],
   },
   {
     id: '7a07ad37-de75-4d63-89f6-c114c7752fb1',
@@ -2239,6 +2290,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-06T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 139,
@@ -2417,9 +2471,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '36c254c8-9373-4254-ac2e-ee03c4da56fe',
@@ -2428,7 +2481,7 @@ export const fakePatients: Patient[] = [
     age: 78,
     email: 'robert.taylor@example.com',
     phone: '+1-555-3091',
-    photo: null,
+    photo: 'images/avatars/old-man-3_resized.jpg',
     role: Roles.PATIENT,
     sex: 'female',
     weight: 58.8,
@@ -2463,6 +2516,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-05T19:06:11',
         },
       ],
+      activity: 'high',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 150,
@@ -2557,7 +2613,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 7642,
@@ -2600,9 +2656,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'high',
     },
+    sessionNotes: [],
   },
   {
     id: '8f37038f-f8e4-4810-af9e-43c28d065576',
@@ -2632,6 +2687,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-26T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 140,
@@ -2810,9 +2868,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '7349ba75-8290-4a1b-aba7-a6cddc951e9a',
@@ -2862,6 +2919,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-13T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 130,
@@ -2956,7 +3016,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 4867,
@@ -2999,9 +3059,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '9cd4777f-d287-4188-9f25-af03601fa9c0',
@@ -3051,6 +3110,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-08T19:06:11',
         },
       ],
+      activity: 'high',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 144,
@@ -3145,7 +3207,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      glucose: [],
+      glucose: null,
       dailySteps: [
         {
           steps: 8417,
@@ -3188,9 +3250,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'high',
     },
+    sessionNotes: [],
   },
   {
     id: '907995f1-6a6e-4d78-98b9-cdfa2d00dec7',
@@ -3226,6 +3287,9 @@ export const fakePatients: Patient[] = [
           startDate: '2025-02-09T19:06:11',
         },
       ],
+      activity: 'medium',
+    },
+    healthMetrics: {
       bloodPressure: [
         {
           systolic: 126,
@@ -3404,9 +3468,8 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
   {
     id: '1bb1ff34-873d-46fb-8f16-6bee5cb8dc95',
@@ -3442,7 +3505,10 @@ export const fakePatients: Patient[] = [
           startDate: '2025-03-17T19:06:11',
         },
       ],
-      bloodPressure: [],
+      activity: 'medium',
+    },
+    healthMetrics: {
+      bloodPressure: null,
       heartRate: [
         {
           bpm: 86,
@@ -3569,8 +3635,7 @@ export const fakePatients: Patient[] = [
           date: '2025-04-25T19:08:46',
         },
       ],
-      sessionNotes: [],
-      activity: 'medium',
     },
+    sessionNotes: [],
   },
 ]
