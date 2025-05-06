@@ -2,6 +2,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   /* Design tokens */
   --color-text: #252525;
@@ -29,6 +31,9 @@
   --border-radius-medium: 1em;
   --border-radius-large: 2em;
   --border-radius-full: 9999;
+
+  --sidebar-width: 80px;
+  --sidebar-width-expanded: 220px;
 
   /* Tailwindcss theming */
   --radius: var(--border-radius-medium);

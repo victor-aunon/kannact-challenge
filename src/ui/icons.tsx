@@ -1,10 +1,15 @@
 import {
   ArrowDown01Icon,
-  ArrowUp10Icon,
   ArrowDownAZIcon,
+  ArrowUp10Icon,
   ArrowUpZAIcon,
-  ChevronRightCircle,
+  CalendarClock,
   ChevronLeftCircle,
+  ChevronRightCircle,
+  HomeIcon,
+  PanelLeftCloseIcon,
+  PanelLeftOpenIcon,
+  SettingsIcon,
 } from 'lucide-react'
 
 export const icons = {
@@ -14,4 +19,9 @@ export const icons = {
   sortDescAlpha: <ArrowUpZAIcon />,
   next: <ChevronRightCircle />,
   prev: <ChevronLeftCircle />,
+  settings: <SettingsIcon />,
+  home: <HomeIcon />,
+  calendar: <CalendarClock />,
+  sidebarOpen: <PanelLeftOpenIcon />,
+  sidebarClose: <PanelLeftCloseIcon />,
 }
