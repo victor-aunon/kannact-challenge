@@ -1,0 +1,10 @@
+.avatar {
+  outline: 3px solid hsl(var(--color-primary));
+  height: var(--size-large);
+  width: var(--size-large);
+}
+
+.avatar__fallback {
+  font-size: var(--size-small);
+  color: hsl(var(--color-primary));
+}

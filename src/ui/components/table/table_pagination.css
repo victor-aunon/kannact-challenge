@@ -1,0 +1,37 @@
+.table__pagination {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table__pagination__info {
+  color: var(--color-text-muted);
+}
+
+.table__pagination__info__count,
+.table__pagination__info__page {
+  color: hsl(var(--color-primary));
+  font-weight: var(--weight-bold);
+}
+
+.table__pagination__info__total {
+  color: hsl(var(--color-secondary));
+  font-weight: var(--weight-bold);
+}
+
+.table__pagination__buttons {
+  display: flex;
+  gap: var(--size-xsmall);
+}
+
+.table__pagination__button {
+  background-color: hsl(var(--color-primary));
+  color: white;
+  transition: all 0.3s ease-in-out;
+
+  svg {
+    stroke: white;
+    scale: 1.2;
+  }
+}
