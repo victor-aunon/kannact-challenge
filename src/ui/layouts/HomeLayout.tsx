@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Sidebar } from 'ui/components/sidebar'
+import { Navbar } from 'ui/components/navbar'
+import './home_layout.css'
 
 export function HomeLayout({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true)
@@ -7,7 +9,10 @@ export function HomeLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-      <main>{children}</main>
+      <main className={`main ${isOpen ? 'main--open' : ''}`}>
+        <Navbar />
+        {children}
+      </main>
     </>
   )
 }

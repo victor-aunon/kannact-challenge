@@ -10,6 +10,7 @@ import {
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
   SettingsIcon,
+  UsersIcon,
 } from 'lucide-react'
 
 export const icons = {
@@ -24,4 +25,5 @@ export const icons = {
   calendar: <CalendarClock />,
   sidebarOpen: <PanelLeftOpenIcon />,
   sidebarClose: <PanelLeftCloseIcon />,
+  patients: <UsersIcon />,
 }
