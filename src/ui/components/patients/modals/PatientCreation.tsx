@@ -27,11 +27,9 @@ export function PatientCreationModal() {
       weight: Number(data.get('weight') as string),
       photo: null,
       medicalData: {
-        diagnoses: [
-          {
-            name: data.get('diagnosis') as string,
-          },
-        ],
+        diagnoses: (data.get('diagnosis') as string)
+          .split(',')
+          .map(diagnosis => ({ name: diagnosis.trim() })),
       },
     }
 

@@ -3,7 +3,6 @@ import { alertService } from 'services/alert.adapter'
 import { apiService } from 'services/api.adapter'
 
 import type { ApiService } from 'application/ports'
-import type { Patient } from 'domain/users'
 
 export function useUpdatePatient() {
   const alert = alertService()
@@ -12,7 +11,7 @@ export function useUpdatePatient() {
 
   return async function updatePatient(
     patientId: UUID,
-    payload: Partial<Patient>,
+    payload: Parameters<ApiService['updatePatient']>[1],
   ) {
     try {
       const { isConfirmed } = await alert.questionAlert({

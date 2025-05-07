@@ -56,6 +56,41 @@ export default function PatientsList() {
       },
     },
     {
+      accessorKey: 'name',
+      enableHiding: true,
+      header: ({ column }) => {
+        return (
+          <button
+            className="table__head--center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Name
+            {column.getIsSorted() === 'asc'
+              ? icons.sortAscAlpha
+              : icons.sortDescAlpha}
+          </button>
+        )
+      },
+    },
+    {
+      accessorKey: 'surname',
+      enableHiding: true,
+      header: ({ column }) => {
+        return (
+          <button
+            className="table__head--center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Surname
+            {column.getIsSorted() === 'asc'
+              ? icons.sortAscAlpha
+              : icons.sortDescAlpha}
+          </button>
+        )
+      },
+    },
+
+    {
       id: 'fullName',
       accessorFn: row => `${row.name} ${row.surname}`,
       filterFn: (row, _columnId, filterValue: string) => {
@@ -153,7 +188,10 @@ export default function PatientsList() {
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: {
+        name: false,
+        surname: false,
+      },
     },
   })
 

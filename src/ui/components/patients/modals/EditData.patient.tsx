@@ -36,7 +36,7 @@ export function EditDataPatientModal({
     >
       <div className="edit-data__form__item">
         <Label htmlFor="sex">Sex</Label>
-        <Select defaultValue={patient?.sex} name="sex">
+        <Select defaultValue={patient?.sex} name="sex" required>
           <SelectTrigger className="w-[300px]">
             <SelectValue placeholder="Select" />
           </SelectTrigger>
@@ -69,6 +69,22 @@ export function EditDataPatientModal({
           defaultValue={patient?.height || 0}
         />
       </div>
+      <div className="edit-data__form__item">
+        <Label htmlFor="diagnosis">Diagnosis</Label>
+        <Input
+          id="diagnosis"
+          name="diagnosis"
+          type="text"
+          placeholder="Diagnosis separated by commas"
+          required
+          defaultValue={
+            patient?.medicalData?.diagnoses
+              ?.map(diagnosis => diagnosis.name)
+              .join(', ') || ''
+          }
+        />
+      </div>
+
       {children}
     </EditDataUserModal>
   )

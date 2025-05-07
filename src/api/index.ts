@@ -343,13 +343,10 @@ mockAdapter.onPatch(getPatientRegex).reply(config => {
     ...payload,
     medicalData: {
       ...patient.medicalData,
-      diagnoses: [
-        ...patient.medicalData.diagnoses,
-        ...(payload.medicalData?.diagnoses || []).map(diagnosis => ({
-          ...diagnosis,
-          id: crypto.randomUUID(),
-        })),
-      ],
+      diagnoses: (payload.medicalData?.diagnoses || []).map(diagnosis => ({
+        ...diagnosis,
+        id: crypto.randomUUID(),
+      })),
     },
   }
   const newFakePatients = fakePatients.map(fakePatient =>

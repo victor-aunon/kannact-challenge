@@ -9,6 +9,7 @@ import { useUpdatePatient } from 'application/updatePatient'
 import { Roles, type Patient } from 'domain/users'
 import { PatientCard, UserCard } from 'ui/components/patients/userCards'
 import { PatientLayout } from 'ui/layouts/PatientLayout'
+import type { ApiService } from 'application/ports'
 
 export function PatientPage() {
   const { patientId } = useParams({ from: routePaths.patient })
@@ -45,7 +46,7 @@ export function PatientPage() {
     setIsPatientModalOpen(false)
 
     const data = new FormData(e.currentTarget)
-    const payload = {
+    const payload: Parameters<ApiService['updatePatient']>[1] = {
       name: data.get('name') as string,
       surname: data.get('surname') as string,
       email: data.get('email') as string,
@@ -54,7 +55,13 @@ export function PatientPage() {
       sex: data.get('sex') as Patient['sex'],
       height: Number(data.get('height') as string),
       weight: Number(data.get('weight') as string),
+      medicalData: {
+        diagnoses: (data.get('diagnosis') as string)
+          .split(',')
+          .map(diagnosis => ({ name: diagnosis.trim() })),
+      },
     }
+    console.log(payload)
 
     await updatePatient(patientId as UUID, payload)
   }
