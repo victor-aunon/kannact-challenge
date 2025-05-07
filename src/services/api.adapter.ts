@@ -74,6 +74,19 @@ export function apiService(): ApiService {
     }
   }
 
+  async function updatePatientEmergencyContact(
+    patientId: UUID,
+    payload: Partial<Patient['emergencyContact']>,
+  ): ReturnType<ApiService['updatePatientEmergencyContact']> {
+    try {
+      const { method, route } = endpoints.updatePatientEmergencyContact
+      const { data } = await httpClient({ method })(route(patientId), payload)
+      return data
+    } catch (error) {
+      throw new Error('Failed to update emergency contact')
+    }
+  }
+
   async function deletePatientEmergencyContact(
     patientId: UUID,
   ): ReturnType<ApiService['deletePatientEmergencyContact']> {
@@ -90,6 +103,7 @@ export function apiService(): ApiService {
     getPatient,
     updatePatient,
     deletePatient,
+    updatePatientEmergencyContact,
     deletePatientEmergencyContact,
     getPatientSteps,
     getPatientHeartRate,

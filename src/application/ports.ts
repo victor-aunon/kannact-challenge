@@ -14,6 +14,10 @@ export type ApiService = {
     payload: Partial<Patient>,
   ) => Promise<Patient | null>
   deletePatient: (id: UUID) => Promise<void>
+  updatePatientEmergencyContact: (
+    id: UUID,
+    payload: Partial<Patient['emergencyContact']>,
+  ) => Promise<Patient['emergencyContact'] | null>
   deletePatientEmergencyContact: (id: UUID) => Promise<void>
   getPatientSteps: (id: UUID) => Promise<DailySteps[] | null>
   getPatientBloodPressure: (id: UUID) => Promise<BloodPressure[] | null>

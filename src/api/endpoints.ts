@@ -19,6 +19,10 @@ export const endpoints = {
     method: 'PATCH',
     route: (id: UUID) => `api/v1/patients/${id}`,
   } as ApiEndPoint<'PATCH', (id: UUID) => string>,
+  updatePatientEmergencyContact: {
+    method: 'PATCH',
+    route: (id: UUID) => `api/v1/patients/${id}/emergency-contacts`,
+  } as ApiEndPoint<'PATCH', (id: UUID) => string>,
   deletePatient: {
     method: 'DELETE',
     route: (id: UUID) => `api/v1/patients/${id}`,

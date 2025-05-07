@@ -243,6 +243,48 @@ mockAdapter.onGet(getPatientBloodPressureRegex).reply(config => {
   return [200, bloodPressure]
 })
 
+const getPatientEmergencyContactRegex = new RegExp(
+  `${endpoints.listPatients.route}/(${uuidPattern})/emergency-contacts`,
+)
+mockAdapter.onPatch(getPatientEmergencyContactRegex).reply(config => {
+  logRequest(config)
+  const id = config.url?.match(getPatientRegex)?.[1]
+  let patient: FakePatient | undefined = fakePatients.find(
+    patient => patient.id === id,
+  )
+
+  const patientsStored = storageService().get<FakePatient[]>('patients')
+  if (patientsStored) {
+    patient = patientsStored.find(patient => patient.id === id)
+  }
+
+  if (!patient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  if (!patient.emergencyContact) {
+    return [404, { message: 'Emergency contact not found' }]
+  }
+
+  const payload = JSON.parse(config.data) as Partial<
+    Patient['emergencyContact']
+  >
+  patient = {
+    ...patient,
+    emergencyContact: {
+      ...patient.emergencyContact,
+      ...payload,
+    },
+  }
+  const newFakePatients = fakePatients.map(fakePatient =>
+    fakePatient.id === id ? patient : fakePatient,
+  )
+  storageService().set('patients', newFakePatients)
+
+  const { emergencyContact } = patient
+  return [200, emergencyContact]
+})
+
 mockAdapter.onPatch(getPatientRegex).reply(config => {
   logRequest(config)
   const id = config.url?.match(getPatientRegex)?.[1]
@@ -259,7 +301,7 @@ mockAdapter.onPatch(getPatientRegex).reply(config => {
     return [404, { message: 'Patient not found' }]
   }
 
-  const payload = config.data as Partial<Patient>
+  const payload = JSON.parse(config.data) as Partial<Patient>
   patient = { ...patient, ...payload }
   const newFakePatients = fakePatients.map(fakePatient =>
     fakePatient.id === id ? patient : fakePatient,
@@ -270,10 +312,7 @@ mockAdapter.onPatch(getPatientRegex).reply(config => {
   return [200, patientData]
 })
 
-const deletePatientEmergencyContactRegex = new RegExp(
-  `${endpoints.listPatients.route}/(${uuidPattern})/emergency-contacts`,
-)
-mockAdapter.onDelete(deletePatientEmergencyContactRegex).reply(config => {
+mockAdapter.onDelete(getPatientEmergencyContactRegex).reply(config => {
   logRequest(config)
   const id = config.url?.match(getPatientRegex)?.[1]
 

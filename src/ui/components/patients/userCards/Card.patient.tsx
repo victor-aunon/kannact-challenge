@@ -26,7 +26,7 @@ export function PatientCard({ patient, onEdit, onDelete }: PatientCardProps) {
           </p>
         </div>
         <div className="user__card__patient__info__item">
-          <p className="user__card__patient__info__item__label">Height</p>
+          <p className="user__card__patient__info__item__label">Weight</p>
           <p className="user__card__patient__info__item__value">
             {icons.weight} {patient.weight} kg
           </p>

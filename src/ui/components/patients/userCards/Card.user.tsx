@@ -1,14 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/components/avatar'
-import { type User, Roles } from 'domain/users'
+import { type User, type Patient, Roles } from 'domain/users'
 import { icons } from 'ui/icons'
 import './card-user.css'
+import { Dialog, DialogTrigger } from 'ui/components/dialog'
+import { EditDataUserModal } from 'ui/components/patients/modals/EditData.user'
+import { EditDataPatientModal } from 'ui/components/patients/modals/EditData.patient'
 
 export type UserCardProps = {
-  user: User
+  user: User | Patient
   role: Roles
   children?: React.ReactNode
   relationship?: string
-  onEdit?: () => void
+  onEdit?: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
   onDelete?: () => void
 }
 
@@ -69,12 +72,30 @@ export function UserCard({
       {children}
       <footer className="user__card__footer">
         {onEdit && (
-          <button
-            className="user__card__button user__card__button--edit"
-            onClick={onEdit}
-          >
-            {icons.edit} Edit
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="user__card__button user__card__button--edit">
+                {icons.edit} Edit
+              </button>
+            </DialogTrigger>
+            {role === Roles.PATIENT && (
+              <EditDataPatientModal
+                patient={user as Patient}
+                title="Edit Patient"
+                description="Edit the patient's information"
+                handleSubmit={onEdit}
+              />
+            )}
+            {role === Roles.EMERGENCY_CONTACT && (
+              <EditDataUserModal
+                user={user}
+                role={role}
+                title="Edit Emergency Contact"
+                description="Edit the emergency contact's information"
+                handleSubmit={onEdit}
+              />
+            )}
+          </Dialog>
         )}
         {onDelete && (
           <button
