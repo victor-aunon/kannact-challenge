@@ -1,10 +1,8 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Input } from 'ui/components/form/input'
 import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -16,6 +14,7 @@ import routePaths from 'app/routes/routePaths'
 import { useGetPatients } from 'application/getPatients'
 import { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/components/avatar'
+import { Input } from 'ui/components/form/input'
 import {
   Table,
   TableBody,
@@ -34,7 +33,6 @@ export default function PatientsList() {
   const { data: patients, error } = useGetPatients()
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   const columns: ColumnDef<Patient>[] = [
     {
@@ -184,7 +182,6 @@ export default function PatientsList() {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       columnFilters,
