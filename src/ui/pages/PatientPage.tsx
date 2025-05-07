@@ -1,17 +1,17 @@
 import { useParams } from '@tanstack/react-router'
-import { useState } from 'react'
 import routePaths from 'app/routes/routePaths'
 import { useDeleteEmergencyContact } from 'application/deleteEmergencyContact'
 import { useDeletePatient } from 'application/deletePatient'
 import { useGetPatient } from 'application/getPatient'
 import { useGetPatientSessionNotes } from 'application/getPatientSessionNotes'
+import type { ApiService } from 'application/ports'
 import { useUpdateEmergencyContact } from 'application/updateEmergencyContact'
 import { useUpdatePatient } from 'application/updatePatient'
 import { Roles, type Patient } from 'domain/users'
+import { useState } from 'react'
+import { SessionNotesList } from 'ui/components/patients/sessions'
 import { PatientCard, UserCard } from 'ui/components/patients/userCards'
 import { PatientLayout } from 'ui/layouts/PatientLayout'
-import { SessionNotesList } from 'ui/components/patients/sessions'
-import type { ApiService } from 'application/ports'
 
 export function PatientPage() {
   const { patientId } = useParams({ from: routePaths.patient })

@@ -1,12 +1,14 @@
-import type { SessionNote } from 'domain/medical'
-import { useState } from 'react'
-import { SessionNoteCard, type SessionNoteCardProps } from './SessionNote'
+import { useParams } from '@tanstack/react-router'
+import routePaths from 'app/routes/routePaths'
 import { useDeletePatientSessionNote } from 'application/deletePatientSessionNote'
 import { useUpdatePatientSessionNotes } from 'application/updatePatientSessionNotes'
-import { SessionNoteCreationModal } from 'ui/components/patients/modals/SessionNoteCreation'
+import type { SessionNote } from 'domain/medical'
+import { useState } from 'react'
 import { Dialog } from 'ui/components/dialog'
-import './session-notes-list.css'
 import { EditNoteModal } from 'ui/components/patients/modals/EditNote'
+import { SessionNoteCreationModal } from 'ui/components/patients/modals/SessionNoteCreation'
+import './session-notes-list.css'
+import { SessionNoteCard, type SessionNoteCardProps } from './SessionNote'
 
 type SessionNotesListProps = Omit<SessionNoteCardProps, 'note'> & {
   notes: SessionNote[]
@@ -15,6 +17,7 @@ type SessionNotesListProps = Omit<SessionNoteCardProps, 'note'> & {
 export function SessionNotesList({ notes }: SessionNotesListProps) {
   const { deleteSessionNote } = useDeletePatientSessionNote()
   const { updateSessionNote } = useUpdatePatientSessionNotes()
+  const { patientId } = useParams({ from: routePaths.patient })
 
   const [selectedNote, setSelectedNote] = useState<SessionNote | null>(null)
 
@@ -37,7 +40,10 @@ export function SessionNotesList({ notes }: SessionNotesListProps) {
   if (notes.length === 0) {
     return (
       <section className="session-notes-list__container">
-        <h3>Latest sessions</h3>
+        <header className="session-notes-list__header">
+          <h3 className="session-notes-list__header__title">Latest sessions</h3>
+          <SessionNoteCreationModal patientId={patientId as UUID} />
+        </header>
         <p>There are no notes</p>
       </section>
     )
@@ -47,7 +53,7 @@ export function SessionNotesList({ notes }: SessionNotesListProps) {
     <section className="session-notes-list__container">
       <header className="session-notes-list__header">
         <h3 className="session-notes-list__header__title">Latest sessions</h3>
-        <SessionNoteCreationModal patientId={notes[0].patientId} />
+        <SessionNoteCreationModal patientId={patientId as UUID} />
       </header>
       <ul className="session-notes-list">
         {notes.map(note => (
