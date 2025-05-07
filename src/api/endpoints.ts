@@ -23,6 +23,10 @@ export const endpoints = {
     method: 'DELETE',
     route: (id: UUID) => `api/v1/patients/${id}`,
   } as ApiEndPoint<'DELETE', (id: UUID) => string>,
+  deletePatientEmergencyContact: {
+    method: 'DELETE',
+    route: (id: UUID) => `api/v1/patients/${id}/emergency-contacts`,
+  } as ApiEndPoint<'DELETE', (id: UUID) => string>,
   getPatientSteps: {
     method: 'GET',
     route: (id: UUID) => `api/v1/patients/${id}/health-metrics/steps`,

@@ -74,11 +74,23 @@ export function apiService(): ApiService {
     }
   }
 
+  async function deletePatientEmergencyContact(
+    patientId: UUID,
+  ): ReturnType<ApiService['deletePatientEmergencyContact']> {
+    try {
+      const { method, route } = endpoints.deletePatientEmergencyContact
+      await httpClient({ method })(route(patientId))
+    } catch (error) {
+      throw new Error('Failed to delete emergency contact')
+    }
+  }
+
   return {
     getPatients,
     getPatient,
     updatePatient,
     deletePatient,
+    deletePatientEmergencyContact,
     getPatientSteps,
     getPatientHeartRate,
     getPatientBloodPressure,
