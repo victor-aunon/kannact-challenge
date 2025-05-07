@@ -1,4 +1,5 @@
 import { useParams } from '@tanstack/react-router'
+import { useState } from 'react'
 import routePaths from 'app/routes/routePaths'
 import { useDeleteEmergencyContact } from 'application/deleteEmergencyContact'
 import { useDeletePatient } from 'application/deletePatient'
@@ -18,10 +19,14 @@ export function PatientPage() {
   const updateEmergencyContact = useUpdateEmergencyContact()
   const deleteEmergencyContact = useDeleteEmergencyContact()
 
+  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+
   const patientName = `${patient?.name} ${patient?.surname || ''}`
 
   const handleUpdateContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsContactModalOpen(false)
 
     const data = new FormData(e.currentTarget)
     const payload = {
@@ -37,6 +42,7 @@ export function PatientPage() {
 
   const handleUpdatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsPatientModalOpen(false)
 
     const data = new FormData(e.currentTarget)
     const payload = {
@@ -67,6 +73,8 @@ export function PatientPage() {
         patient={patient}
         onEdit={handleUpdatePatient}
         onDelete={() => deletePatient(patientId as UUID)}
+        isModalOpen={isPatientModalOpen}
+        setIsModalOpen={setIsPatientModalOpen}
       />
       {patient.emergencyContact && (
         <UserCard
@@ -75,6 +83,8 @@ export function PatientPage() {
           relationship={patient.emergencyContact.relationship}
           onEdit={handleUpdateContact}
           onDelete={() => deleteEmergencyContact(patientId as UUID)}
+          isModalOpen={isContactModalOpen}
+          setIsModalOpen={setIsContactModalOpen}
         />
       )}
     </PatientLayout>

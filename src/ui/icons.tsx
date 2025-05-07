@@ -17,6 +17,7 @@ import {
   SquarePenIcon,
   TrashIcon,
   UserIcon,
+  UserRoundPlusIcon,
   UsersIcon,
   VenusIcon,
   WeightIcon,
@@ -44,4 +45,5 @@ export const icons = {
   weight: <WeightIcon />,
   edit: <SquarePenIcon />,
   delete: <TrashIcon />,
+  addPatient: <UserRoundPlusIcon />,
 }

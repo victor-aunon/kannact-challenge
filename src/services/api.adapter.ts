@@ -18,6 +18,14 @@ export function apiService(): ApiService {
     return data
   }
 
+  async function createPatient(
+    payload: Parameters<ApiService['createPatient']>[0],
+  ): ReturnType<ApiService['createPatient']> {
+    const { method, route } = endpoints.createPatient
+    const { data } = await httpClient({ method })(route, payload)
+    return data
+  }
+
   async function getPatientSteps(
     patientId: UUID,
   ): ReturnType<ApiService['getPatientSteps']> {
@@ -101,6 +109,7 @@ export function apiService(): ApiService {
   return {
     getPatients,
     getPatient,
+    createPatient,
     updatePatient,
     deletePatient,
     updatePatientEmergencyContact,

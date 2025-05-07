@@ -12,7 +12,7 @@ import type {
   Glucose,
   HeartRate,
 } from 'domain/medical'
-import type { Patient } from 'domain/users'
+import { Roles, type Patient } from 'domain/users'
 
 type HTTClientMethodMap = {
   GET: (url: string, config?: AxiosRequestConfig) => Promise<AxiosResponse>
@@ -106,6 +106,33 @@ mockAdapter.onGet(getPatientRegex).reply(config => {
 
   const { medicalData, sessionNotes, healthMetrics, ...patientData } = patient
   return [200, patientData]
+})
+
+mockAdapter.onPost(endpoints.listPatients.route).reply(config => {
+  logRequest(config)
+  const patient = JSON.parse(config.data) as Patient
+  const fakePatient: FakePatient = {
+    ...patient,
+    id: crypto.randomUUID(),
+    role: Roles.PATIENT,
+    healthMetrics: {
+      bloodPressure: null,
+      dailySteps: null,
+      glucose: null,
+      heartRate: null,
+    },
+    medicalData: {
+      activity: null,
+      diagnoses: [],
+      activeMedications: [],
+    },
+    emergencyContact: null,
+    sessionNotes: [],
+  }
+  fakePatients.unshift(fakePatient)
+  storageService().set('patients', fakePatients)
+
+  return [201, patient]
 })
 
 const getPatientHeartRateRegex = new RegExp(

@@ -1,10 +1,10 @@
+import { type Patient, Roles, type User } from 'domain/users'
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/components/avatar'
-import { type User, type Patient, Roles } from 'domain/users'
+import { Dialog, DialogTrigger } from 'ui/components/dialog'
+import { EditDataPatientModal } from 'ui/components/patients/modals/EditData.patient'
+import { EditDataUserModal } from 'ui/components/patients/modals/EditData.user'
 import { icons } from 'ui/icons'
 import './card-user.css'
-import { Dialog, DialogTrigger } from 'ui/components/dialog'
-import { EditDataUserModal } from 'ui/components/patients/modals/EditData.user'
-import { EditDataPatientModal } from 'ui/components/patients/modals/EditData.patient'
 
 export type UserCardProps = {
   user: User | Patient
@@ -13,6 +13,8 @@ export type UserCardProps = {
   relationship?: string
   onEdit?: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
   onDelete?: () => void
+  isModalOpen?: boolean
+  setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function UserCard({
@@ -21,6 +23,8 @@ export function UserCard({
   relationship,
   onEdit,
   onDelete,
+  isModalOpen,
+  setIsModalOpen,
   children,
 }: UserCardProps) {
   const variantClassName = role === Roles.PATIENT ? 'primary' : 'secondary'
@@ -72,9 +76,14 @@ export function UserCard({
       {children}
       <footer className="user__card__footer">
         {onEdit && (
-          <Dialog>
+          <Dialog open={isModalOpen}>
             <DialogTrigger asChild>
-              <button className="user__card__button user__card__button--edit">
+              <button
+                className="user__card__button user__card__button--edit"
+                onClick={() => {
+                  if (setIsModalOpen) setIsModalOpen(true)
+                }}
+              >
                 {icons.edit} Edit
               </button>
             </DialogTrigger>
@@ -84,6 +93,9 @@ export function UserCard({
                 title="Edit Patient"
                 description="Edit the patient's information"
                 handleSubmit={onEdit}
+                closeModal={() => {
+                  if (setIsModalOpen) setIsModalOpen(false)
+                }}
               />
             )}
             {role === Roles.EMERGENCY_CONTACT && (
@@ -93,6 +105,9 @@ export function UserCard({
                 title="Edit Emergency Contact"
                 description="Edit the emergency contact's information"
                 handleSubmit={onEdit}
+                closeModal={() => {
+                  if (setIsModalOpen) setIsModalOpen(false)
+                }}
               />
             )}
           </Dialog>

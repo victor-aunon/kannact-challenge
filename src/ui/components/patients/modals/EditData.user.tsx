@@ -1,6 +1,5 @@
 import { Roles, type Patient, type User } from 'domain/users'
 import {
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -14,6 +13,7 @@ export type EditDataUserModalProps = {
   title: string
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
   role: Roles
+  closeModal: () => void
   user?: User | Patient['emergencyContact']
   description?: string
   children?: React.ReactNode
@@ -23,6 +23,7 @@ export function EditDataUserModal({
   title,
   handleSubmit,
   role,
+  closeModal,
   user,
   description,
   children,
@@ -107,22 +108,19 @@ export function EditDataUserModal({
         )}
         {children}
         <DialogFooter className="edit-data__form__footer">
-          <DialogClose asChild>
-            <button
-              type="reset"
-              className="edit-data__form__button edit-data__form__button--reset"
-            >
-              Close
-            </button>
-          </DialogClose>
-          <DialogClose asChild>
-            <button
-              type="submit"
-              className="edit-data__form__button edit-data__form__button--submit"
-            >
-              Save
-            </button>
-          </DialogClose>
+          <button
+            type="reset"
+            className="edit-data__form__button edit-data__form__button--reset"
+            onClick={closeModal}
+          >
+            Close
+          </button>
+          <button
+            type="submit"
+            className="edit-data__form__button edit-data__form__button--submit"
+          >
+            Save
+          </button>
         </DialogFooter>
       </form>
     </DialogContent>

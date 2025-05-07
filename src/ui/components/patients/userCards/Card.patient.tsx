@@ -10,13 +10,21 @@ type PatientCardProps = Omit<
   patient: Patient
 }
 
-export function PatientCard({ patient, onEdit, onDelete }: PatientCardProps) {
+export function PatientCard({
+  patient,
+  onEdit,
+  onDelete,
+  isModalOpen,
+  setIsModalOpen,
+}: PatientCardProps) {
   return (
     <UserCard
       user={patient}
       role={Roles.PATIENT}
       onEdit={onEdit}
       onDelete={onDelete}
+      isModalOpen={isModalOpen}
+      setIsModalOpen={setIsModalOpen}
     >
       <div className="user__card__patient__info">
         <div className="user__card__patient__info__item">

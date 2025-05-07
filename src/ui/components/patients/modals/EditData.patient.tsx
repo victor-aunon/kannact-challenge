@@ -22,6 +22,7 @@ export function EditDataPatientModal({
   handleSubmit,
   patient,
   description,
+  closeModal,
   children,
 }: EditDataPatientModalProps) {
   return (
@@ -30,6 +31,7 @@ export function EditDataPatientModal({
       user={patient}
       description={description}
       handleSubmit={handleSubmit}
+      closeModal={closeModal}
       role={Roles.PATIENT}
     >
       <div className="edit-data__form__item">

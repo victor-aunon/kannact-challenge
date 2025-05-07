@@ -15,6 +15,10 @@ export const endpoints = {
     method: 'GET',
     route: (id: UUID) => `api/v1/patients/${id}`,
   } as ApiEndPoint<'GET', (id: UUID) => string>,
+  createPatient: {
+    method: 'POST',
+    route: 'api/v1/patients',
+  } as ApiEndPoint<'POST'>,
   updatePatient: {
     method: 'PATCH',
     route: (id: UUID) => `api/v1/patients/${id}`,

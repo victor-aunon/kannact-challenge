@@ -9,6 +9,9 @@ import type { Patient } from 'domain/users'
 export type ApiService = {
   getPatients: () => Promise<Patient[]>
   getPatient: (id: UUID) => Promise<Patient>
+  createPatient: (
+    payload: Omit<Patient, 'id' | 'role' | 'emergencyContact'>,
+  ) => Promise<Patient>
   updatePatient: (
     id: UUID,
     payload: Partial<Patient>,
