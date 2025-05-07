@@ -9,6 +9,7 @@ import {
   HomeIcon,
   MailIcon,
   MarsIcon,
+  NotebookPenIcon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
   PhoneIcon,
@@ -46,4 +47,5 @@ export const icons = {
   edit: <SquarePenIcon />,
   delete: <TrashIcon />,
   addPatient: <UserRoundPlusIcon />,
+  addSessionNote: <NotebookPenIcon />,
 }

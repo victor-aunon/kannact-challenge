@@ -106,6 +106,60 @@ export function apiService(): ApiService {
     }
   }
 
+  async function getPatientSessionNotes(
+    patientId: UUID,
+  ): ReturnType<ApiService['getPatientSessionNotes']> {
+    try {
+      const { method, route } = endpoints.getPatientSessionNotes
+      const { data } = await httpClient({ method })(route(patientId))
+      return data
+    } catch (error) {
+      throw new Error('Failed to get patient session notes')
+    }
+  }
+
+  async function createPatientSessionNote(
+    patientId: UUID,
+    payload: Parameters<ApiService['createPatientSessionNote']>[1],
+  ): ReturnType<ApiService['createPatientSessionNote']> {
+    try {
+      const { method, route } = endpoints.createPatientSessionNote
+      const { data } = await httpClient({ method })(route(patientId), payload)
+      return data
+    } catch (error) {
+      throw new Error('Failed to create patient session note')
+    }
+  }
+
+  async function updatePatientSessionNote(
+    patientId: UUID,
+    noteId: UUID,
+    payload: Parameters<ApiService['updatePatientSessionNote']>[2],
+  ): ReturnType<ApiService['updatePatientSessionNote']> {
+    try {
+      const { method, route } = endpoints.updatePatientSessionNote
+      const { data } = await httpClient({ method })(
+        route(patientId, noteId),
+        payload,
+      )
+      return data
+    } catch (error) {
+      throw new Error('Failed to update patient session note')
+    }
+  }
+
+  async function deletePatientSessionNote(
+    patientId: UUID,
+    noteId: UUID,
+  ): ReturnType<ApiService['deletePatientSessionNote']> {
+    try {
+      const { method, route } = endpoints.deletePatientSessionNote
+      await httpClient({ method })(route(patientId, noteId))
+    } catch (error) {
+      throw new Error('Failed to delete patient session note')
+    }
+  }
+
   return {
     getPatients,
     getPatient,
@@ -118,5 +172,9 @@ export function apiService(): ApiService {
     getPatientHeartRate,
     getPatientBloodPressure,
     getPatientGlucose,
+    getPatientSessionNotes,
+    createPatientSessionNote,
+    updatePatientSessionNote,
+    deletePatientSessionNote,
   }
 }

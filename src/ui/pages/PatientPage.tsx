@@ -4,16 +4,19 @@ import routePaths from 'app/routes/routePaths'
 import { useDeleteEmergencyContact } from 'application/deleteEmergencyContact'
 import { useDeletePatient } from 'application/deletePatient'
 import { useGetPatient } from 'application/getPatient'
+import { useGetPatientSessionNotes } from 'application/getPatientSessionNotes'
 import { useUpdateEmergencyContact } from 'application/updateEmergencyContact'
 import { useUpdatePatient } from 'application/updatePatient'
 import { Roles, type Patient } from 'domain/users'
 import { PatientCard, UserCard } from 'ui/components/patients/userCards'
 import { PatientLayout } from 'ui/layouts/PatientLayout'
+import { SessionNotesList } from 'ui/components/patients/sessions'
 import type { ApiService } from 'application/ports'
 
 export function PatientPage() {
   const { patientId } = useParams({ from: routePaths.patient })
   const { data: patient, error } = useGetPatient(patientId as UUID)
+  const { data: sessionNotes } = useGetPatientSessionNotes(patientId as UUID)
 
   const updatePatient = useUpdatePatient()
   const deletePatient = useDeletePatient()
@@ -61,7 +64,6 @@ export function PatientPage() {
           .map(diagnosis => ({ name: diagnosis.trim() })),
       },
     }
-    console.log(payload)
 
     await updatePatient(patientId as UUID, payload)
   }
@@ -94,6 +96,7 @@ export function PatientPage() {
           setIsModalOpen={setIsContactModalOpen}
         />
       )}
+      <SessionNotesList notes={sessionNotes} />
     </PatientLayout>
   )
 }

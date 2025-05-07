@@ -54,7 +54,7 @@ export function EditDataPatientModal({
           type="number"
           min="0"
           step="0.01"
-          placeholder="Enter the weight in kg"
+          placeholder="Type the weight in kg"
           defaultValue={patient?.weight || 0}
         />
       </div>
@@ -65,7 +65,7 @@ export function EditDataPatientModal({
           name="height"
           type="number"
           min="0"
-          placeholder="Enter the height in cm"
+          placeholder="Type the height in cm"
           defaultValue={patient?.height || 0}
         />
       </div>

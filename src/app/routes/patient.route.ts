@@ -9,11 +9,17 @@ export const patientRoute = createRoute({
   getParentRoute: () => rootRoute,
   loader: async ({ context, params }) => {
     const queryClient = context.queryClient
-    const { getPatient } = apiService()
-    await queryClient.ensureQueryData({
-      queryKey: ['patient', params.patientId],
-      queryFn: () => getPatient(params.patientId as UUID),
-    })
+    const { getPatient, getPatientSessionNotes } = apiService()
+    await Promise.all([
+      queryClient.ensureQueryData({
+        queryKey: ['sessionNotes', params.patientId],
+        queryFn: () => getPatientSessionNotes(params.patientId as UUID),
+      }),
+      queryClient.ensureQueryData({
+        queryKey: ['patient', params.patientId],
+        queryFn: () => getPatient(params.patientId as UUID),
+      }),
+    ])
   },
   component: PatientPage,
 })

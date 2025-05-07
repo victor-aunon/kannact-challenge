@@ -51,4 +51,22 @@ export const endpoints = {
     method: 'GET',
     route: (id: UUID) => `api/v1/patients/${id}/health-metrics/blood-pressure`,
   } as ApiEndPoint<'GET', (id: UUID) => string>,
+  getPatientSessionNotes: {
+    method: 'GET',
+    route: (id: UUID) => `api/v1/patients/${id}/session-notes`,
+  } as ApiEndPoint<'GET', (id: UUID) => string>,
+  createPatientSessionNote: {
+    method: 'POST',
+    route: (id: UUID) => `api/v1/patients/${id}/session-notes`,
+  } as ApiEndPoint<'POST', (id: UUID) => string>,
+  updatePatientSessionNote: {
+    method: 'PATCH',
+    route: (id: UUID, noteId: UUID) =>
+      `api/v1/patients/${id}/session-notes/${noteId}`,
+  } as ApiEndPoint<'PATCH', (id: UUID, noteId: UUID) => string>,
+  deletePatientSessionNote: {
+    method: 'DELETE',
+    route: (id: UUID, noteId: UUID) =>
+      `api/v1/patients/${id}/session-notes/${noteId}`,
+  } as ApiEndPoint<'DELETE', (id: UUID, noteId: UUID) => string>,
 }

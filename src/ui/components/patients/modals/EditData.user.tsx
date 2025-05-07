@@ -42,7 +42,7 @@ export function EditDataUserModal({
             name="name"
             type="text"
             required
-            placeholder="Enter the name"
+            placeholder="Type the name"
             defaultValue={user?.name || ''}
           />
         </div>
@@ -53,7 +53,7 @@ export function EditDataUserModal({
             name="surname"
             type="text"
             required
-            placeholder="Enter the surname"
+            placeholder="Type the surname"
             defaultValue={user?.surname || ''}
           />
         </div>
@@ -64,7 +64,7 @@ export function EditDataUserModal({
             name="email"
             type="email"
             required
-            placeholder="Enter the email"
+            placeholder="Type the email"
             defaultValue={user?.email || ''}
           />
         </div>
@@ -75,7 +75,7 @@ export function EditDataUserModal({
             name="phone"
             type="tel"
             required
-            placeholder="Enter the phone"
+            placeholder="Type the phone"
             defaultValue={user?.phone || ''}
           />
         </div>
@@ -87,7 +87,7 @@ export function EditDataUserModal({
             type="number"
             min="0"
             required
-            placeholder="Enter the age"
+            placeholder="Type the age"
             defaultValue={user?.age || ''}
           />
         </div>
@@ -99,7 +99,7 @@ export function EditDataUserModal({
               name="relationship"
               type="text"
               required
-              placeholder="Enter the relationship"
+              placeholder="Type the relationship"
               defaultValue={
                 (user as Patient['emergencyContact'])?.relationship || ''
               }

@@ -4,5 +4,5 @@
   margin-inline: auto;
   gap: var(--size-small);
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: auto auto;
 }

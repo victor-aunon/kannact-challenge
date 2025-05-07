@@ -40,10 +40,12 @@ export type DailySteps = {
 }
 
 export type SessionNote = {
+  id: UUID
   note: string
   therapistId: UUID
   patientId: UUID
   date: DateTimeString
+  updatedAt?: DateTimeString
 }
 
 export type PatientMedicalData = {

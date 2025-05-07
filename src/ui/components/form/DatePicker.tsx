@@ -3,11 +3,10 @@ import { cn } from 'ui/lib/utils'
 import { Button } from 'ui/components/button'
 import { Calendar } from 'ui/components/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from 'ui/components/popover'
-import { SelectSingleEventHandler } from 'react-day-picker'
 
-type DatePickerProps = {
+type DatePickerProps = React.ComponentProps<typeof Calendar> & {
   date: Date
-  setDate: SelectSingleEventHandler
+  setDate: React.Dispatch<React.SetStateAction<Date>>
   placeHolder?: string
 }
 
@@ -36,11 +35,13 @@ export function DatePicker({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0 z-[5000]">
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={date => {
+            if (date) setDate(date)
+          }}
           initialFocus
         />
       </PopoverContent>

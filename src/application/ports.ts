@@ -4,6 +4,7 @@ import type {
   DailySteps,
   Glucose,
   HeartRate,
+  SessionNote,
 } from 'domain/medical'
 import type { Patient } from 'domain/users'
 
@@ -40,6 +41,17 @@ export type ApiService = {
   getPatientBloodPressure: (id: UUID) => Promise<BloodPressure[] | null>
   getPatientHeartRate: (id: UUID) => Promise<HeartRate[] | null>
   getPatientGlucose: (id: UUID) => Promise<Glucose[] | null>
+  getPatientSessionNotes: (id: UUID) => Promise<SessionNote[]>
+  createPatientSessionNote: (
+    id: UUID,
+    payload: Omit<SessionNote, 'id'>,
+  ) => Promise<SessionNote>
+  updatePatientSessionNote: (
+    patientId: UUID,
+    id: UUID,
+    payload: Partial<SessionNote>,
+  ) => Promise<SessionNote>
+  deletePatientSessionNote: (patientId: UUID, id: UUID) => Promise<void>
 }
 
 export type StorageService = {

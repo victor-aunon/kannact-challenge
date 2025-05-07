@@ -88,6 +88,34 @@ const uuidPattern =
 const getPatientRegex = new RegExp(
   `${endpoints.listPatients.route}/(${uuidPattern})`,
 )
+const getPatientSessionNotesRegex = new RegExp(
+  `${endpoints.listPatients.route}/(${uuidPattern})/session-notes`,
+)
+mockAdapter.onGet(getPatientSessionNotesRegex).reply(config => {
+  logRequest(config)
+  const id = config.url?.match(getPatientRegex)?.[1]
+
+  let patient: FakePatient | undefined = fakePatients.find(
+    patient => patient.id === id,
+  )
+
+  const patientsStored = storageService().get<FakePatient[]>('patients')
+  if (patientsStored) {
+    patient = patientsStored.find(patient => patient.id === id)
+  }
+
+  if (!patient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  return [
+    200,
+    patient.sessionNotes.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    ),
+  ]
+})
+
 mockAdapter.onGet(getPatientRegex).reply(config => {
   logRequest(config)
   const id = config.url?.match(getPatientRegex)?.[1]
@@ -318,6 +346,87 @@ mockAdapter.onPatch(getPatientEmergencyContactRegex).reply(config => {
   return [200, emergencyContact]
 })
 
+mockAdapter.onPost(getPatientSessionNotesRegex).reply(config => {
+  logRequest(config)
+  const id = config.url?.match(getPatientRegex)?.[1]
+
+  let patient: FakePatient | undefined = fakePatients.find(
+    patient => patient.id === id,
+  )
+
+  const patientsStored = storageService().get<FakePatient[]>('patients')
+  if (patientsStored) {
+    patient = patientsStored.find(patient => patient.id === id)
+  }
+
+  if (!patient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  const payload = JSON.parse(config.data) as Parameters<
+    ApiService['createPatientSessionNote']
+  >[1]
+
+  patient = {
+    ...patient,
+    sessionNotes: [
+      ...patient.sessionNotes,
+      { ...payload, id: crypto.randomUUID() },
+    ],
+  }
+  const newFakePatients = fakePatients.map(fakePatient =>
+    fakePatient.id === id ? patient : fakePatient,
+  )
+  storageService().set('patients', newFakePatients)
+
+  return [200, payload]
+})
+
+const updatePatientSessionNotesRegex = new RegExp(
+  `${endpoints.listPatients.route}/(${uuidPattern})/session-notes/(${uuidPattern})`,
+)
+
+mockAdapter.onPatch(updatePatientSessionNotesRegex).reply(config => {
+  logRequest(config)
+  const [_, patientId, noteId] =
+    config.url?.match(updatePatientSessionNotesRegex) || []
+  let patient: FakePatient | undefined = fakePatients.find(
+    patient => patient.id === patientId,
+  )
+
+  const patientsStored = storageService().get<FakePatient[]>('patients')
+  if (patientsStored) {
+    patient = patientsStored.find(patient => patient.id === patientId)
+  }
+
+  if (!patient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  const note = patient.sessionNotes.find(note => note.id === noteId)
+
+  if (!note) {
+    return [404, { message: 'Note not found' }]
+  }
+
+  const payload = JSON.parse(config.data) as Parameters<
+    ApiService['updatePatientSessionNote']
+  >[2]
+
+  patient = {
+    ...patient,
+    sessionNotes: patient.sessionNotes.map(sessionNote =>
+      sessionNote.id === noteId ? { ...sessionNote, ...payload } : sessionNote,
+    ),
+  }
+  const newFakePatients = fakePatients.map(fakePatient =>
+    fakePatient.id === patientId ? patient : fakePatient,
+  )
+  storageService().set('patients', newFakePatients)
+
+  return [200, { ...note, ...payload }]
+})
+
 mockAdapter.onPatch(getPatientRegex).reply(config => {
   logRequest(config)
   const id = config.url?.match(getPatientRegex)?.[1]
@@ -379,6 +488,46 @@ mockAdapter.onDelete(getPatientEmergencyContactRegex).reply(config => {
   storageService().set('patients', newFakePatients)
 
   return [200, { message: 'Emergency contact deleted' }]
+})
+
+mockAdapter.onDelete(updatePatientSessionNotesRegex).reply(config => {
+  logRequest(config)
+
+  const [_, patientId, noteId] =
+    config.url?.match(updatePatientSessionNotesRegex) || []
+
+  let _fakePatients: FakePatient[] = fakePatients
+
+  const fakePatientsStored = storageService().get<FakePatient[]>('patients')
+  if (fakePatientsStored) {
+    _fakePatients = fakePatientsStored
+  }
+
+  const fakePatient = _fakePatients.find(patient => patient.id === patientId)
+
+  if (!fakePatient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  const note = fakePatient.sessionNotes.find(note => note.id === noteId)
+
+  if (!note) {
+    return [404, { message: 'Note not found' }]
+  }
+
+  const newFakePatients = _fakePatients.map(patient =>
+    patient.id === patientId
+      ? {
+          ...patient,
+          sessionNotes: patient.sessionNotes.filter(
+            sessionNote => sessionNote.id !== noteId,
+          ),
+        }
+      : patient,
+  )
+  storageService().set('patients', newFakePatients)
+
+  return [200, { message: 'Session note deleted' }]
 })
 
 mockAdapter.onDelete(getPatientRegex).reply(config => {

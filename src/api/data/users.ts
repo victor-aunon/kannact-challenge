@@ -200,7 +200,22 @@ export const fakePatients: FakePatient[] = [
         },
       ],
     },
-    sessionNotes: [],
+    sessionNotes: [
+      {
+        id: 'd1a68b1b-a023-4c43-8b8d-c9f1c0e3ac82',
+        date: '2025-05-04T19:08:46',
+        note: 'Patient is taking medication.',
+        patientId: 'abf1a21a-47b5-4b64-9712-3f6f799bc439',
+        therapistId: 'de64c1bd-0a02-45b5-bf18-28d65c9e490b',
+      },
+      {
+        id: '791bee2b-963c-48b5-942f-ae55a16a6dc9',
+        date: '2025-05-07T19:08:46',
+        note: 'Patient is taking medication. Also diagnosed with Osteoarthritis and Hypothyroidism.',
+        patientId: 'abf1a21a-47b5-4b64-9712-3f6f799bc439',
+        therapistId: 'de64c1bd-0a02-45b5-bf18-28d65c9e490b',
+      },
+    ],
   },
   {
     id: '90e1ca2d-139f-4617-aafc-9e104c7a6c0e',
