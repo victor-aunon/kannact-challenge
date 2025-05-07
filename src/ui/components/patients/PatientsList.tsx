@@ -1,6 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-import { apiService } from 'services/api.adapter'
+import { useNavigate } from '@tanstack/react-router'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,27 +11,26 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-
+import routePaths from 'app/routes/routePaths'
+import { useGetPatients } from 'application/getPatients'
+import { useState } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from 'ui/components/avatar'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
   TablePagination,
+  TableRow,
 } from 'ui/components/table'
 import { icons } from 'ui/icons'
-import { Avatar, AvatarFallback, AvatarImage } from 'ui/components/avatar'
+
 import type { Patient } from 'domain/users'
 
 export default function PatientsList() {
-  const { getPatients } = apiService()
-  const { data: patients, error } = useSuspenseQuery({
-    queryKey: ['patients'],
-    queryFn: getPatients,
-  })
-
+  const navigate = useNavigate()
+  const { data: patients, error } = useGetPatients()
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -169,7 +166,16 @@ export default function PatientsList() {
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
-              <TableRow key={row.id} className="table__row--selectable">
+              <TableRow
+                key={row.id}
+                className="table__row--selectable"
+                onClick={() =>
+                  navigate({
+                    to: routePaths.patient,
+                    params: { patientId: row.original.id },
+                  })
+                }
+              >
                 {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id} className="table__cell--centered">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

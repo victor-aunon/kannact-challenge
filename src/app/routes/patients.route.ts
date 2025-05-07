@@ -1,8 +1,8 @@
-import PatientsList from 'ui/components/patients/PatientsList'
 import { createRoute } from '@tanstack/react-router'
-import routePaths from 'app/routes/routePaths'
 import { rootRoute } from 'app/routes/root.route'
+import routePaths from 'app/routes/routePaths'
 import { apiService } from 'services/api.adapter'
+import { PatientsPage } from 'ui/pages/PatientsPage'
 
 export const patientsRoute = createRoute({
   path: routePaths.patients,
@@ -15,5 +15,5 @@ export const patientsRoute = createRoute({
       queryFn: getPatients,
     })
   },
-  component: PatientsList,
+  component: PatientsPage,
 })
