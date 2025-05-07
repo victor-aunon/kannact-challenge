@@ -1,5 +1,5 @@
 import { createRoute } from '@tanstack/react-router'
-import { rootRoute } from 'app/routes/root.route'
+import { rootRoute } from '@/app/routes/__root'
 import routePaths from 'app/routes/routePaths'
 import { apiService } from 'services/api.adapter'
 import { PatientsPage } from 'ui/pages/PatientsPage'
