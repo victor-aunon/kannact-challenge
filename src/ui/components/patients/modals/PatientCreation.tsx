@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { EditDataPatientModal } from 'ui/components/patients/modals/EditData.patient'
 import { useCreatePatient } from 'application/createPatient'
 import { icons } from 'ui/icons'
+import { ApiService } from 'application/ports'
 import type { Patient } from 'domain/users'
 
 export function PatientCreationModal() {
@@ -15,7 +16,7 @@ export function PatientCreationModal() {
     setIsOpen(false)
 
     const data = new FormData(e.currentTarget)
-    const payload: Omit<Patient, 'id' | 'emergencyContact' | 'role'> = {
+    const payload: Parameters<ApiService['createPatient']>[0] = {
       name: data.get('name') as string,
       surname: data.get('surname') as string,
       email: data.get('email') as string,
@@ -25,6 +26,13 @@ export function PatientCreationModal() {
       height: Number(data.get('height') as string),
       weight: Number(data.get('weight') as string),
       photo: null,
+      medicalData: {
+        diagnoses: [
+          {
+            name: data.get('diagnosis') as string,
+          },
+        ],
+      },
     }
 
     await createPatient(payload)

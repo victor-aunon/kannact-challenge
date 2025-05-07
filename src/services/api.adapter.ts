@@ -60,7 +60,7 @@ export function apiService(): ApiService {
 
   async function updatePatient(
     patientId: UUID,
-    payload: Partial<Patient>,
+    payload: Parameters<ApiService['updatePatient']>[1],
   ): ReturnType<ApiService['updatePatient']> {
     try {
       const { method, route } = endpoints.updatePatient

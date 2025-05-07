@@ -1,4 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
+import { Input } from 'ui/components/form/input'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -55,28 +56,20 @@ export default function PatientsList() {
       },
     },
     {
-      accessorKey: 'name',
-      header: ({ column }) => {
-        return (
-          <button
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            Name
-            {column.getIsSorted() === 'asc'
-              ? icons.sortAscAlpha
-              : icons.sortDescAlpha}
-          </button>
-        )
+      id: 'fullName',
+      accessorFn: row => `${row.name} ${row.surname}`,
+      filterFn: (row, _columnId, filterValue: string) => {
+        const fullName =
+          `${row.original.name} ${row.original.surname}`.toLowerCase()
+        return fullName.includes(filterValue.toLowerCase())
       },
-    },
-    {
-      accessorKey: 'surname',
       header: ({ column }) => {
         return (
           <button
+            className="table__head--center"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Surname
+            Full name
             {column.getIsSorted() === 'asc'
               ? icons.sortAscAlpha
               : icons.sortDescAlpha}
@@ -90,6 +83,7 @@ export default function PatientsList() {
       header: ({ column }) => {
         return (
           <button
+            className="table__head--center"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Age (yo)
@@ -101,11 +95,32 @@ export default function PatientsList() {
       },
     },
     {
+      accessorKey: 'main-condition',
+      enableHiding: true,
+      header: ({ column }) => {
+        return (
+          <button
+            className="table__head--center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            1st Condition
+            {column.getIsSorted() === 'asc'
+              ? icons.sortAscAlpha
+              : icons.sortDescAlpha}
+          </button>
+        )
+      },
+      accessorFn: row => {
+        return row.medicalData.diagnoses[0].name
+      },
+    },
+    {
       accessorKey: 'weight',
       enableHiding: true,
       header: ({ column }) => {
         return (
           <button
+            className="table__head--center"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             Weight (kg)
@@ -119,7 +134,9 @@ export default function PatientsList() {
     {
       accessorKey: 'phone',
       enableHiding: true,
-      header: 'Phone',
+      header: () => {
+        return <span className="table__head--span--center">Phone</span>
+      },
     },
   ]
 
@@ -144,6 +161,15 @@ export default function PatientsList() {
 
   return (
     <>
+      <Input
+        type="text"
+        value={(table.getColumn('fullName')?.getFilterValue() as string) ?? ''}
+        onChange={e =>
+          table.getColumn('fullName')?.setFilterValue(e.target.value)
+        }
+        placeholder="Search by name or surname"
+        className="table__input--search"
+      />
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (

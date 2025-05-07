@@ -17,6 +17,21 @@
   color: hsl(var(--color-primary));
 }
 
+.table__head--center {
+  margin-inline: auto;
+}
+
+.table__head--span--center {
+  display: block;
+  text-align: center;
+}
+
+.table__input--search {
+  max-width: 400px;
+  margin-left: auto;
+  margin-top: 0;
+}
+
 .table__row {
   background-color: var(--color-card);
 }
@@ -41,4 +56,10 @@
 
 .table__cell--centered {
   text-align: center;
+}
+
+@media screen and (min-width: 890px) {
+  .table__input--search {
+    margin-top: -3rem;
+  }
 }

@@ -3,6 +3,7 @@ import { endpoints } from 'api/endpoints'
 import { env } from 'app/config/env'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
+import { ApiService } from 'application/ports'
 import { storageService } from 'services/storage.adapter'
 
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
@@ -77,7 +78,7 @@ mockAdapter.onGet(endpoints.listPatients.route).reply(config => {
     _fakePatients = fakePatientsStored
   }
   const patients: Patient[] = _fakePatients.map(
-    ({ medicalData, sessionNotes, healthMetrics, ...patient }) => patient,
+    ({ sessionNotes, healthMetrics, ...patient }) => patient,
   )
   return [200, patients]
 })
@@ -104,13 +105,15 @@ mockAdapter.onGet(getPatientRegex).reply(config => {
     return [404, { message: 'Patient not found' }]
   }
 
-  const { medicalData, sessionNotes, healthMetrics, ...patientData } = patient
+  const { sessionNotes, healthMetrics, ...patientData } = patient
   return [200, patientData]
 })
 
 mockAdapter.onPost(endpoints.listPatients.route).reply(config => {
   logRequest(config)
-  const patient = JSON.parse(config.data) as Patient
+  const patient = JSON.parse(config.data) as Parameters<
+    ApiService['createPatient']
+  >[0]
   const fakePatient: FakePatient = {
     ...patient,
     id: crypto.randomUUID(),
@@ -123,7 +126,10 @@ mockAdapter.onPost(endpoints.listPatients.route).reply(config => {
     },
     medicalData: {
       activity: null,
-      diagnoses: [],
+      diagnoses: patient.medicalData.diagnoses.map(diagnosis => ({
+        ...diagnosis,
+        id: crypto.randomUUID(),
+      })),
       activeMedications: [],
     },
     emergencyContact: null,
@@ -328,8 +334,24 @@ mockAdapter.onPatch(getPatientRegex).reply(config => {
     return [404, { message: 'Patient not found' }]
   }
 
-  const payload = JSON.parse(config.data) as Partial<Patient>
-  patient = { ...patient, ...payload }
+  const payload = JSON.parse(config.data) as Parameters<
+    ApiService['updatePatient']
+  >[1]
+
+  patient = {
+    ...patient,
+    ...payload,
+    medicalData: {
+      ...patient.medicalData,
+      diagnoses: [
+        ...patient.medicalData.diagnoses,
+        ...(payload.medicalData?.diagnoses || []).map(diagnosis => ({
+          ...diagnosis,
+          id: crypto.randomUUID(),
+        })),
+      ],
+    },
+  }
   const newFakePatients = fakePatients.map(fakePatient =>
     fakePatient.id === id ? patient : fakePatient,
   )

@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
 import type { ApiService } from 'application/ports'
-import type { Patient } from 'domain/users'
 import { alertService } from 'services/alert.adapter'
 import { apiService } from 'services/api.adapter'
 

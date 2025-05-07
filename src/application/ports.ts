@@ -1,4 +1,5 @@
 import type {
+  PatientMedicalData,
   BloodPressure,
   DailySteps,
   Glucose,
@@ -10,11 +11,24 @@ export type ApiService = {
   getPatients: () => Promise<Patient[]>
   getPatient: (id: UUID) => Promise<Patient>
   createPatient: (
-    payload: Omit<Patient, 'id' | 'role' | 'emergencyContact'>,
+    payload: Omit<
+      Patient,
+      'id' | 'role' | 'emergencyContact' | 'medicalData'
+    > & {
+      medicalData: {
+        diagnoses: Omit<PatientMedicalData['diagnoses'][number], 'id'>[]
+      }
+    },
   ) => Promise<Patient>
   updatePatient: (
     id: UUID,
-    payload: Partial<Patient>,
+    payload: Partial<
+      Omit<Patient, 'id' | 'role' | 'emergencyContact' | 'medicalData'> & {
+        medicalData: {
+          diagnoses: Omit<PatientMedicalData['diagnoses'][number], 'id'>[]
+        }
+      }
+    >,
   ) => Promise<Patient | null>
   deletePatient: (id: UUID) => Promise<void>
   updatePatientEmergencyContact: (
