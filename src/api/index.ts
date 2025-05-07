@@ -13,6 +13,7 @@ import type {
   HeartRate,
 } from 'domain/medical'
 import type { Patient } from 'domain/users'
+import { mock } from 'node:test'
 
 type HTTClientMethodMap = {
   GET: (url: string, config?: AxiosRequestConfig) => Promise<AxiosResponse>
@@ -67,9 +68,6 @@ const logRequest = (config: AxiosRequestConfig) => {
     `${new Date().toISOString()} - ${config.method?.toUpperCase()} ${config.url}`,
   )
 }
-
-// Set users into local storage
-storageService().set('patients', fakePatients)
 
 mockAdapter.onGet(endpoints.listPatients.route).reply(config => {
   logRequest(config)
@@ -244,6 +242,54 @@ mockAdapter.onGet(getPatientBloodPressureRegex).reply(config => {
     }))
 
   return [200, bloodPressure]
+})
+
+mockAdapter.onPatch(getPatientRegex).reply(config => {
+  logRequest(config)
+  const id = config.url?.match(getPatientRegex)?.[1]
+  let patient: FakePatient | undefined = fakePatients.find(
+    patient => patient.id === id,
+  )
+
+  const patientsStored = storageService().get<FakePatient[]>('patients')
+  if (patientsStored) {
+    patient = patientsStored.find(patient => patient.id === id)
+  }
+
+  if (!patient) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  const payload = config.data as Partial<Patient>
+  patient = { ...patient, ...payload }
+  const newFakePatients = fakePatients.map(fakePatient =>
+    fakePatient.id === id ? patient : fakePatient,
+  )
+  storageService().set('patients', newFakePatients)
+
+  const { medicalData, sessionNotes, healthMetrics, ...patientData } = patient
+  return [200, patientData]
+})
+
+mockAdapter.onDelete(getPatientRegex).reply(config => {
+  logRequest(config)
+  const id = config.url?.match(getPatientRegex)?.[1]
+
+  let _fakePatients: FakePatient[] = fakePatients
+
+  const fakePatientsStored = storageService().get<FakePatient[]>('patients')
+  if (fakePatientsStored) {
+    _fakePatients = fakePatientsStored
+  }
+
+  if (!_fakePatients.find(patient => patient.id === id)) {
+    return [404, { message: 'Patient not found' }]
+  }
+
+  const newFakePatients = _fakePatients.filter(patient => patient.id !== id)
+  storageService().set('patients', newFakePatients)
+
+  return [200, { message: 'Patient deleted' }]
 })
 
 export default httpClient

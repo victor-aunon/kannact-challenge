@@ -69,12 +69,18 @@ export function UserCard({
       {children}
       <footer className="user__card__footer">
         {onEdit && (
-          <button className="user__card__button user__card__button--edit">
+          <button
+            className="user__card__button user__card__button--edit"
+            onClick={onEdit}
+          >
             {icons.edit} Edit
           </button>
         )}
         {onDelete && (
-          <button className="user__card__button user__card__button--delete">
+          <button
+            className="user__card__button user__card__button--delete"
+            onClick={onDelete}
+          >
             {icons.delete} Delete
           </button>
         )}

@@ -1,6 +1,6 @@
 import httpClient from '@/api'
 import { endpoints } from 'api/endpoints'
-
+import type { Patient } from 'domain/users'
 import type { ApiService } from 'application/ports'
 
 export function apiService(): ApiService {
@@ -50,9 +50,35 @@ export function apiService(): ApiService {
     return data
   }
 
+  async function updatePatient(
+    patientId: UUID,
+    payload: Partial<Patient>,
+  ): ReturnType<ApiService['updatePatient']> {
+    try {
+      const { method, route } = endpoints.updatePatient
+      const { data } = await httpClient({ method })(route(patientId), payload)
+      return data
+    } catch (error) {
+      throw new Error('Failed to update patient')
+    }
+  }
+
+  async function deletePatient(
+    patientId: UUID,
+  ): ReturnType<ApiService['deletePatient']> {
+    try {
+      const { method, route } = endpoints.deletePatient
+      await httpClient({ method })(route(patientId))
+    } catch (error) {
+      throw new Error('Failed to delete patient')
+    }
+  }
+
   return {
     getPatients,
     getPatient,
+    updatePatient,
+    deletePatient,
     getPatientSteps,
     getPatientHeartRate,
     getPatientBloodPressure,

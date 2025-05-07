@@ -15,6 +15,14 @@ export const endpoints = {
     method: 'GET',
     route: (id: UUID) => `api/v1/patients/${id}`,
   } as ApiEndPoint<'GET', (id: UUID) => string>,
+  updatePatient: {
+    method: 'PATCH',
+    route: (id: UUID) => `api/v1/patients/${id}`,
+  } as ApiEndPoint<'PATCH', (id: UUID) => string>,
+  deletePatient: {
+    method: 'DELETE',
+    route: (id: UUID) => `api/v1/patients/${id}`,
+  } as ApiEndPoint<'DELETE', (id: UUID) => string>,
   getPatientSteps: {
     method: 'GET',
     route: (id: UUID) => `api/v1/patients/${id}/health-metrics/steps`,
