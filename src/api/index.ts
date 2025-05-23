@@ -5,6 +5,7 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import { ApiService } from 'application/ports'
 import { storageService } from 'services/storage.adapter'
+import { getPatients } from 'api/user/application/getPatients'
 
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import type {
@@ -14,6 +15,11 @@ import type {
   HeartRate,
 } from 'domain/medical'
 import { Roles, type Patient } from 'domain/users'
+import { getPatient } from './user/application/getPatient'
+import { createPatient } from './user/application/createPatients'
+import { updatePatient } from './user/application/updatePatient'
+import { deleteEmergencyContact } from './user/application/deleteEmergencyContact'
+import { deletePatient } from './user/application/deletePatient'
 
 type HTTClientMethodMap = {
   GET: (url: string, config?: AxiosRequestConfig) => Promise<AxiosResponse>
@@ -59,35 +65,12 @@ function httpClient<R = any, M extends keyof HTTClientMethodMap = 'GET'>({
   return (...args: Parameters<HTTClientMethodMap[M]>) => fn(...args)
 }
 
-const mockAdapter = new MockAdapter(axiosClient, {
+export const mockAdapter = new MockAdapter(axiosClient, {
   delayResponse: Math.random() * 300 + 300,
 }) // Between 300ms and 600ms
 
-const logRequest = (config: AxiosRequestConfig) => {
-  console.debug(
-    `${new Date().toISOString()} - ${config.method?.toUpperCase()} ${config.url}`,
-  )
-}
+getPatients()
 
-mockAdapter.onGet(endpoints.listPatients.route).reply(config => {
-  logRequest(config)
-  let _fakePatients: FakePatient[] = fakePatients
-
-  const fakePatientsStored = storageService().get<FakePatient[]>('patients')
-  if (fakePatientsStored) {
-    _fakePatients = fakePatientsStored
-  }
-  const patients: Patient[] = _fakePatients.map(
-    ({ sessionNotes, healthMetrics, ...patient }) => patient,
-  )
-  return [200, patients]
-})
-
-const uuidPattern =
-  '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}'
-const getPatientRegex = new RegExp(
-  `${endpoints.listPatients.route}/(${uuidPattern})`,
-)
 const getPatientSessionNotesRegex = new RegExp(
   `${endpoints.listPatients.route}/(${uuidPattern})/session-notes`,
 )
@@ -116,58 +99,9 @@ mockAdapter.onGet(getPatientSessionNotesRegex).reply(config => {
   ]
 })
 
-mockAdapter.onGet(getPatientRegex).reply(config => {
-  logRequest(config)
-  const id = config.url?.match(getPatientRegex)?.[1]
+getPatient()
 
-  let patient: FakePatient | undefined = fakePatients.find(
-    patient => patient.id === id,
-  )
-
-  const patientsStored = storageService().get<FakePatient[]>('patients')
-  if (patientsStored) {
-    patient = patientsStored.find(patient => patient.id === id)
-  }
-
-  if (!patient) {
-    return [404, { message: 'Patient not found' }]
-  }
-
-  const { sessionNotes, healthMetrics, ...patientData } = patient
-  return [200, patientData]
-})
-
-mockAdapter.onPost(endpoints.listPatients.route).reply(config => {
-  logRequest(config)
-  const patient = JSON.parse(config.data) as Parameters<
-    ApiService['createPatient']
-  >[0]
-  const fakePatient: FakePatient = {
-    ...patient,
-    id: crypto.randomUUID(),
-    role: Roles.PATIENT,
-    healthMetrics: {
-      bloodPressure: null,
-      dailySteps: null,
-      glucose: null,
-      heartRate: null,
-    },
-    medicalData: {
-      activity: null,
-      diagnoses: patient.medicalData.diagnoses.map(diagnosis => ({
-        ...diagnosis,
-        id: crypto.randomUUID(),
-      })),
-      activeMedications: [],
-    },
-    emergencyContact: null,
-    sessionNotes: [],
-  }
-  fakePatients.unshift(fakePatient)
-  storageService().set('patients', fakePatients)
-
-  return [201, patient]
-})
+createPatient()
 
 const getPatientHeartRateRegex = new RegExp(
   `${endpoints.listPatients.route}/(${uuidPattern})/health-metrics/heart-rate`,
@@ -427,68 +361,9 @@ mockAdapter.onPatch(updatePatientSessionNotesRegex).reply(config => {
   return [200, { ...note, ...payload }]
 })
 
-mockAdapter.onPatch(getPatientRegex).reply(config => {
-  logRequest(config)
-  const id = config.url?.match(getPatientRegex)?.[1]
-  let patient: FakePatient | undefined = fakePatients.find(
-    patient => patient.id === id,
-  )
+updatePatient()
 
-  const patientsStored = storageService().get<FakePatient[]>('patients')
-  if (patientsStored) {
-    patient = patientsStored.find(patient => patient.id === id)
-  }
-
-  if (!patient) {
-    return [404, { message: 'Patient not found' }]
-  }
-
-  const payload = JSON.parse(config.data) as Parameters<
-    ApiService['updatePatient']
-  >[1]
-
-  patient = {
-    ...patient,
-    ...payload,
-    medicalData: {
-      ...patient.medicalData,
-      diagnoses: (payload.medicalData?.diagnoses || []).map(diagnosis => ({
-        ...diagnosis,
-        id: crypto.randomUUID(),
-      })),
-    },
-  }
-  const newFakePatients = fakePatients.map(fakePatient =>
-    fakePatient.id === id ? patient : fakePatient,
-  )
-  storageService().set('patients', newFakePatients)
-
-  const { medicalData, sessionNotes, healthMetrics, ...patientData } = patient
-  return [200, patientData]
-})
-
-mockAdapter.onDelete(getPatientEmergencyContactRegex).reply(config => {
-  logRequest(config)
-  const id = config.url?.match(getPatientRegex)?.[1]
-
-  let _fakePatients: FakePatient[] = fakePatients
-
-  const fakePatientsStored = storageService().get<FakePatient[]>('patients')
-  if (fakePatientsStored) {
-    _fakePatients = fakePatientsStored
-  }
-
-  if (!_fakePatients.find(patient => patient.id === id)) {
-    return [404, { message: 'Patient not found' }]
-  }
-
-  const newFakePatients = _fakePatients.map(patient =>
-    patient.id === id ? { ...patient, emergencyContact: null } : patient,
-  )
-  storageService().set('patients', newFakePatients)
-
-  return [200, { message: 'Emergency contact deleted' }]
-})
+deleteEmergencyContact()
 
 mockAdapter.onDelete(updatePatientSessionNotesRegex).reply(config => {
   logRequest(config)
@@ -530,25 +405,6 @@ mockAdapter.onDelete(updatePatientSessionNotesRegex).reply(config => {
   return [200, { message: 'Session note deleted' }]
 })
 
-mockAdapter.onDelete(getPatientRegex).reply(config => {
-  logRequest(config)
-  const id = config.url?.match(getPatientRegex)?.[1]
-
-  let _fakePatients: FakePatient[] = fakePatients
-
-  const fakePatientsStored = storageService().get<FakePatient[]>('patients')
-  if (fakePatientsStored) {
-    _fakePatients = fakePatientsStored
-  }
-
-  if (!_fakePatients.find(patient => patient.id === id)) {
-    return [404, { message: 'Patient not found' }]
-  }
-
-  const newFakePatients = _fakePatients.filter(patient => patient.id !== id)
-  storageService().set('patients', newFakePatients)
-
-  return [200, { message: 'Patient deleted' }]
-})
+deletePatient()
 
 export default httpClient
